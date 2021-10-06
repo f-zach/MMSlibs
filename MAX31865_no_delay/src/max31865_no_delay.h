@@ -27,7 +27,7 @@ class MAX31865
         float _Rref;
         int _mode;
         int _wiring;
-        int _fualtDetection;
+        int _faultDetection;
         int _filter;
         byte _configuration;
         uint16_t _startOneShot;

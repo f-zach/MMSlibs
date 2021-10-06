@@ -15,6 +15,7 @@ private:
    int _sensorCount;
    int _i;
    byte _sensorCS[4] = {B00000001, B00000010, B00000100, B00001000};
+   long _tMeasurementStart[4];
 
 public:
     RTDmodule(int i2c_addressRTD);

@@ -29,15 +29,24 @@ void RTDmodule::config(byte sensorPosition, int Rref, int mode, int wiring = 1, 
 
 void RTDmodule::startMeasurementSingle(int sensorNo)
 {
+    if(millis() - _tMeasurementStart[sensorNo] >= 65)
+    {
     Wire.beginTransmission(_i2c_addressTCO);
     Wire.write(_sensorCS[sensorNo]);
     Wire.endTransmission();
 
     MAX31865rtd.startMeasurement();
+    _tMeasurementStart[sensorNo] = millis();
 
     Wire.beginTransmission(_i2c_addressTCO);
     Wire.write(0xFF);
     Wire.endTransmission();
+    }
+    else
+    {
+        
+    }
+    
 }
 
 void RTDmodule::startMesasurementAll()

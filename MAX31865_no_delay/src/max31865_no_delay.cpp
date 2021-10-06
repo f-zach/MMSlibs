@@ -13,9 +13,17 @@ pt100rtd PT100 = pt100rtd();
 MAX31865::MAX31865(int cs_pin)
     : rtd(5000000,MSBFIRST,SPI_MODE1)
 {
-    pinMode(cs_pin, OUTPUT);
-    _cs_pin = cs_pin;
-    SPI.begin();
+    if(cs_pin = 0)
+    {
+
+    }
+    else
+    {
+        pinMode(cs_pin, OUTPUT);
+        _cs_pin = cs_pin;
+        SPI.begin();
+    }
+    
 }
 
 // In the config function different parameters of the MAX31865 can be set.
@@ -44,7 +52,7 @@ void MAX31865::config(int Rref, int mode, int wiring, int faultDetection, int fi
 
     _wiring = wiring << 4;
 
-    _fualtDetection = faultDetection << 2;
+    _faultDetection = faultDetection << 2;
 
     _filter = filter;
 
@@ -52,7 +60,7 @@ void MAX31865::config(int Rref, int mode, int wiring, int faultDetection, int fi
     _startOneShot = _addr_write_config;
     _VBias_off = _addr_write_config;
 
-    _configuration = 0 + _mode + _wiring + _fualtDetection + _filter;
+    _configuration = 0 + _mode + _wiring + _faultDetection + _filter;
 
     _startOneShot = _startOneShot << 8 | (_configuration + (B101 << 5));
 
