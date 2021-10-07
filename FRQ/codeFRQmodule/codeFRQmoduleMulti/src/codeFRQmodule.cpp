@@ -17,15 +17,38 @@ void setup()
   pinMode(LEDPin1, OUTPUT);
   pinMode(LEDPin2, OUTPUT);
 
+  digitalWriteFast(LEDPin1,HIGH);
+  delay(250);
+
   Serial.begin(9600);
+
+  digitalWriteFast(LEDPin1,LOW);  
+  digitalWriteFast(LEDPin2,HIGH);
+  delay(250);
+
   Serial1.begin(115200);
+
+  digitalWriteFast(LEDPin1,HIGH);
+  digitalWriteFast(LEDPin2,LOW);
+  delay(250);
 
   freq1.begin(9);
 
   if (freq2active)
   {
-    freq2.begin();
+    freq2.begin(10);
   }
+  
+  for(int j = 0; j<8; j++)
+  {
+    digitalToggleFast(LEDPin1);
+    digitalToggleFast(LEDPin2);
+    delay(250);
+  }
+
+  digitalWriteFast(LEDPin1,LOW);
+  digitalWriteFast(LEDPin2,LOW);
+  
 }
 
 double sum1 = 0, sum2 = 0;
@@ -43,7 +66,7 @@ void loop()
       count1 = count1 + 1;
     }
 
-    if (freq2active && freq2.available)
+    if (freq2active && freq2.available())
     {
       // average several reading together
       sum2 = sum2 + freq2.read();
@@ -51,10 +74,12 @@ void loop()
     }
 
     //Stop measurement on recieved 'f'
-    if (Serial1.available() > 0)
+    if (Serial.available() > 0)
     {
-      if (Serial1.read() == 'f')
+      
+      if (Serial.read() == 'f')
       {
+
         measurementActive = false;
       }
     }
@@ -62,6 +87,7 @@ void loop()
 
   digitalWriteFast(LEDPin1, HIGH);
 
+  Serial.println(1);
   //Calculate frequency
   if (count1 != 0)
   {
@@ -78,18 +104,20 @@ void loop()
   Serial1.write(sendBuffer1, 4);
 
   digitalWriteFast(LEDPin1, LOW);
+
+  Serial.println(2);
   while (!Serial.available())
   {
   }
 
-  if (Seial.read() == 'n')
+  if (Serial.read() == 'n')
   {
     digitalWriteFast(LEDPin2, HIGH);
     if (freq2active && count2 != 0)
     {
-      frequency2 = freq2.countToFrequency(sum2 / count2)
+      frequency2 = freq2.countToFrequency(sum2 / count2);
     }
-    else if (freq2active &&count2 = 0)
+    else if (freq2active &&count2 == 0)
     {
       frequency2 = 0;
     }
@@ -97,15 +125,19 @@ void loop()
     memcpy(sendBuffer2, &frequency2, 4);
 
     Serial.write(sendBuffer2, 4);
+
+    digitalWriteFast(LEDPin2,LOW);
   }
+
+  Serial.println(3);
 
   Serial.println(frequency1);
   Serial.println(frequency2);
 
-  double sum1 = 0, sum2 = 0;
-  int count1 = 0, count2 = 0;
+  sum1 = 0, sum2 = 0;
+  count1 = 0, count2 = 0;
 
-  digitalWriteFast(LEDPin, LOW);
+  Serial.flush();
 
   measurementActive = true;
 }
