@@ -5,7 +5,7 @@ FRQmodule::FRQmodule(long baudRate)
     Serial1.begin(baudRate);
 }
 
-float FRQmodule::getFrequency()
+float FRQmodule::getFrequency(bool twoFreq)
 {
     Serial1.write('r');
 
@@ -16,7 +16,24 @@ float FRQmodule::getFrequency()
         i++;
     }
 
-    memcpy(&frequency, _freqBuffer, 4);
+    memcpy(&frequency1, _freqBuffer, 4);
 
-    return frequency;
+    if (twoFreq)
+    {
+        Serial.write('n')
+
+            while (Serial1.available() > 0)
+        {
+            _freqBuffer[i] = Serial1.read();
+            i++;
+        }
+
+        memcpy(&frequency2, _freqBuffer, 4);
+    }
+    else
+    {
+        Serial.write('0')
+    }
+
+    return frequency1, frequency2;
 }
