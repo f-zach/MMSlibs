@@ -61,25 +61,24 @@ void loop()
   {
     if (freq1.available())
     {
-      // average several reading together
+      //Sum the measured signal cycle times and count measurements for frequency 1
       sum1 = sum1 + freq1.read();
       count1 = count1 + 1;
     }
 
     if (freq2active && freq2.available())
     {
-      // average several reading together
+      //Sum the measured signal cycle times and count measurements for frequency 2
       sum2 = sum2 + freq2.read();
       count2 = count2 + 1;
     }
 
     //Stop measurement on recieved 'f'
-    if (Serial.available() > 0)
+    if (Serial1.available() > 0)
     {
       
-      if (Serial.read() == 'f')
+      if (Serial1.read() == 'f')
       {
-
         measurementActive = false;
       }
     }
@@ -87,57 +86,68 @@ void loop()
 
   digitalWriteFast(LEDPin1, HIGH);
 
-  Serial.println(1);
-  //Calculate frequency
+  //Calculate frequency 1
   if (count1 != 0)
   {
     frequency1 = freq1.countToFrequency(sum1 / count1);
   }
-  //if measurement count is 0 treat
+  //If measurement count is 0 set frequency 1 to 0
   else
   {
     frequency1 = 0;
   }
 
+  //Copy frequency 1 to send buffer
   memcpy(sendBuffer1, &frequency1, 4);
 
+  //Send the buffer via Serial1
   Serial1.write(sendBuffer1, 4);
+
+  //Print frequency 1 over the USB serial port
+  Serial.println(frequency1);
 
   digitalWriteFast(LEDPin1, LOW);
 
-  Serial.println(2);
-  while (!Serial.available())
+  //Wait until another command symbol arrives
+  while (!Serial1.available())
   {
   }
 
-  if (Serial.read() == 'n')
+  //If a 'n' is recieved send frequency 2
+  if (Serial1.read() == 'n')
   {
     digitalWriteFast(LEDPin2, HIGH);
+
+    //Check if measurement of frequency 2 is activated
     if (freq2active && count2 != 0)
     {
+      //Calculate frequency 2
       frequency2 = freq2.countToFrequency(sum2 / count2);
     }
-    else if (freq2active &&count2 == 0)
+    else if (freq2active && count2 == 0)
     {
+      //If count 2 is zero set frequency 2 to zero
       frequency2 = 0;
     }
 
+    //Copy frequency 2 to send buffer
     memcpy(sendBuffer2, &frequency2, 4);
 
-    Serial.write(sendBuffer2, 4);
+    //Send the buffer via Serial1
+    Serial1.write(sendBuffer2, 4);
+
+    //
+    Serial.println(frequency2);
 
     digitalWriteFast(LEDPin2,LOW);
   }
-
-  Serial.println(3);
-
-  Serial.println(frequency1);
+  
   Serial.println(frequency2);
 
   sum1 = 0, sum2 = 0;
   count1 = 0, count2 = 0;
 
-  Serial.flush();
+  Serial1.flush();
 
   measurementActive = true;
 }
