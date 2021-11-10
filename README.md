@@ -1,6 +1,6 @@
 # MMSlibs
 MMSlibs is a collection of all libraries developed for the Modular Measurement System.
-Add this repository to any MMS project.
+The Libraries will be moved to their own repositories soon, to enable integration from GitHub via PlatformIO.
 
 The following Libraries are included:\
 - MAIN: Library for the MAIN module. Contains functions for measuring the enviromental temperature and pressure with the intgrated sensors of the module.
