@@ -1,8 +1,8 @@
 # MMSlibs
 MMSlibs is a collection of all libraries developed for the Modular Measurement System.
-The Libraries will be moved to their own repositories soon, to enable integration from GitHub via PlatformIO.
+The Libraries will be moved to their own repositories soon, to enable integration into projects from GitHub via PlatformIO.
 
-The following Libraries are included:\
+The following Libraries are included:
 - MAIN: Library for the MAIN module. Contains functions for measuring the enviromental temperature and pressure with the intgrated sensors of the module.
 - TCO: Library for the TCO module. Contains functions for the TCO module for measuring temperatures with up to eight K-type thermocouples.
 - RTD: Library for the RTD module. Contains funcitons for the RTD module for measuring temperatures with up to four Pt100 RTD sensors.
